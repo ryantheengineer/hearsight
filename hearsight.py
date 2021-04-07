@@ -32,6 +32,17 @@ def vectorToWAV(vector,outputFileName):
     write(outputFileName, sps, vector)
     # Might want to add a function that plays the output file?
 
+## CONSIDER USING THIS FUNCTION TO SHORTEN VECTORIZERGB FUNCTION BELOW
+# def fillVector(vindex,R,G,B,data,i,j,color):
+#     if color == 0:
+#         R[vindex] = data[i,j,color]
+#     elif color == 1:
+#         G[vindex] = data[i,j,color]
+#     elif color == 2:
+#         B[vindex] = data[i,j,color]
+#     else:
+#         print('ERROR')
+
 def vectorizeRGB(data, columns, direction):
     # Take the numpy array of image data and create three vectors with the rows
     # or columns of data (specified by columns string in args) and chosen
@@ -41,115 +52,138 @@ def vectorizeRGB(data, columns, direction):
     cols = data.shape[1]
     channels = data.shape[2]
 
-    R = np.empty(0)
-    G = np.empty(0)
-    B = np.empty(0)
+    vlength = rows*cols
+
+    R = np.zeros(vlength)
+    G = np.zeros(vlength)
+    B = np.zeros(vlength)
+
+    vindex = 0
 
     if columns == True:
         if direction == 'LRcolsUDrows':
-            for color in range(channels):
-                for j in range(cols):
-                    for i in range(rows):
+            for j in range(cols):
+                for i in range(rows):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color]) # NEED TO CHANGE THE METHOD TO PREALLOCATE ARRAY SIZE INSTEAD OF APPEND
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
+
+                    vindex += 1
+
 
         elif direction == 'RLcolsUDrows':
-            for color in range(channels):
-                for j in reversed(range(cols)):
-                    for i in range(rows):
+            for j in reversed(range(cols)):
+                for i in range(rows):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
+
+                    vindex += 1
 
         elif direction == 'LRcolsDUrows':
-            for color in range(channels):
-                for j in range(cols):
-                    for i in reversed(range(rows)):
+            for j in range(cols):
+                for i in reversed(range(rows)):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
 
+                    vindex += 1
+
         elif direction == 'RLcolsDUrows':
-            for color in range(channels):
-                for j in reversed(range(cols)):
-                    for i in reversed(range(rows)):
+            for j in reversed(range(cols)):
+                for i in reversed(range(rows)):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
+
+                    vindex += 1
+
 
 
     elif columns == False:
         if direction == 'LRcolsUDrows':
-            for color in range(channels):
-                for i in range(rows):
-                    for j in range(cols):
+            for i in range(rows):
+                for j in range(cols):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
+
+                    vindex += 1
+
 
         elif direction == 'RLcolsUDrows':
-            for color in range(channels):
-                for i in range(rows):
-                    for j in reversed(range(cols)):
+            for i in range(rows):
+                for j in reversed(range(cols)):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
+
+                    vindex += 1
 
         elif direction == 'LRcolsDUrows':
-            for color in range(channels):
-                for i in reversed(range(rows)):
-                    for j in range(cols):
+            for i in reversed(range(rows)):
+                for j in range(cols):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
 
+                    vindex += 1
+
         elif direction == 'RLcolsDUrows':
-            for color in range(channels):
-                for i in reversed(range(rows)):
-                    for j in reversed(range(cols)):
+            for i in reversed(range(rows)):
+                for j in reversed(range(cols)):
+                    for color in range(channels):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R[vindex] = data[i,j,color]
                         elif color == 1:
-                            G = np.append(G, data[i,j,color])
+                            G[vindex] = data[i,j,color]
                         elif color == 2:
-                            B = np.append(B, data[i,j,color])
+                            B[vindex] = data[i,j,color]
                         else:
                             print('ERROR')
+
+                    vindex += 1
 
     return [R, G, B]
