@@ -19,7 +19,9 @@ def imageToArray(image):
     print(data.shape)
     return data
 
-# Scale image data to range of values acceptible in chosen WAV format
+# Scale image data to range of values acceptible in chosen WAV format (this
+# needs to be adjusted to account for image format-- JPEG won't work with this
+# math)
 def scaleToWAV(vector):
     for i in range(len(vector)):
         vector[i] -= 32768
@@ -49,7 +51,7 @@ def vectorizeRGB(data, columns, direction):
                 for j in range(cols):
                     for i in range(rows):
                         if color == 0:
-                            R = np.append(R, data[i,j,color])
+                            R = np.append(R, data[i,j,color]) # NEED TO CHANGE THE METHOD TO PREALLOCATE ARRAY SIZE INSTEAD OF APPEND
                         elif color == 1:
                             G = np.append(G, data[i,j,color])
                         elif color == 2:
@@ -149,3 +151,5 @@ def vectorizeRGB(data, columns, direction):
                             B = np.append(B, data[i,j,color])
                         else:
                             print('ERROR')
+
+    return [R, G, B]
