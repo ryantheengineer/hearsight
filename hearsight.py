@@ -54,8 +54,56 @@ def vectorToWAV(vector,outputFileName): # THE ENCODING DOESN'T CURRENTLY WORK
     write(outputFileName, sps, vector.astype(np.int16)) # GOT THIS TO WORK WHEN ASTYPE IS UINT8 FOR THE DATA I'M WORKING WITH
     # Might want to add a function that plays the output file?
 
+def vectorizeMergeRGB(data, boxdim, columns, direction):
+    # Create a new sampled array for each color channel, and then turn data into
+    # a column vector as vectorizeRGB does, choosing the sampling paradigm
+    # (sampling paradigm later might include a spiral path or something to
+    # prevent regular abrupt changes found in using columns or rows)
+
+    datarows = data.shape[0]
+    datacols = data.shape[1]
+
+    Rdata = np.asarray(data[:,:,0])
+    Gdata = np.asarray(data[:,:,1])
+    Bdata = np.asarray(data[:,:,2])
+
+    samplerows = datarows - boxdim + 1
+    samplecols = datacols - boxdim + 1
+
+    Rsample = np.zeros(samplerows, samplecols)
+    Gsample = np.zeros(samplerows, samplecols)
+    Bsample = np.zeros(samplerows, samplecols)
+
+    for i in range(samplerows):
+        for j in range(samplecols):
+            # Calculate the average pixel value for the appropriate channel
+            Ravg = 0.
+            Bavg = 0.
+            Gavg = 0.
+
+            rowsrange = range(i, i+boxdim)
+            colsrange = range(j, j+boxdim)
+
+            for m in rowsrange:
+                for n in colsrange:
+                    Ravg += Rdata[m,n]
+                    Gavg += Gdata[m,n]
+                    Bavg += Bdata[m,n]  # For now the channel splitting is happening early and explicitly to make it clear, but later this should be automated and the channel split should be at the very end for efficiency
+
+            Ravg /= boxdim**2
+            Gavg /= boxdim**2
+            Bavg /= boxdim**2
+
+            Rsample[i,j] = Ravg
+            Gsample[i,j] = Gavg
+            Bsample[i,j] = Bavg
+
+    # Vectorize the RGB data THIS IS NOT FINISHED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    return [R,G,B]
+
 ## CONSIDER USING THIS FUNCTION TO SHORTEN VECTORIZERGB FUNCTION BELOW
-# def fillVector(vindex,R,G,B,data,i,j,color):
+# def fillVector(vindex, R, G, B, data, i, j, color):
 #     if color == 0:
 #         R[vindex] = data[i,j,color]
 #     elif color == 1:
