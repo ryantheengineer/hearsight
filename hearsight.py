@@ -20,7 +20,7 @@ from scipy.io.wavfile import write
 # the photo. This might require OpenCV.
 
 # 4/9/21: Merge function works okay, need a better way to handle large datasets
-# without crashing (ex: when sample box is 3x3)
+# without crashing (ex: when sample box is 3x3). Maybe with generators?
 
 
 
