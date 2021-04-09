@@ -19,6 +19,9 @@ from scipy.io.wavfile import write
 # user choose the path of sampling, so they can choose more interesting parts of
 # the photo. This might require OpenCV.
 
+# 4/9/21: Merge function works okay, need a better way to handle large datasets
+# without crashing (ex: when sample box is 3x3)
+
 
 
 def openImage(filename):
@@ -62,6 +65,7 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
 
     datarows = data.shape[0]
     datacols = data.shape[1]
+    channels = data.shape[2]
 
     Rdata = np.asarray(data[:,:,0])
     Gdata = np.asarray(data[:,:,1])
@@ -70,9 +74,9 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
     samplerows = datarows - boxdim + 1
     samplecols = datacols - boxdim + 1
 
-    Rsample = np.zeros(samplerows, samplecols)
-    Gsample = np.zeros(samplerows, samplecols)
-    Bsample = np.zeros(samplerows, samplecols)
+    Rsample = np.zeros([samplerows, samplecols])
+    Gsample = np.zeros([samplerows, samplecols])
+    Bsample = np.zeros([samplerows, samplecols])
 
     for i in range(samplerows):
         for j in range(samplecols):
@@ -99,6 +103,139 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
             Bsample[i,j] = Bavg
 
     # Vectorize the RGB data THIS IS NOT FINISHED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    vlength = samplerows*samplecols
+
+    R = np.zeros(vlength)
+    G = np.zeros(vlength)
+    B = np.zeros(vlength)
+
+    vindex = 0
+
+    if columns == True:
+        if direction == 'LRcolsUDrows':
+            for j in range(samplecols):
+                for i in range(samplerows):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+
+        elif direction == 'RLcolsUDrows':
+            for j in reversed(range(samplecols)):
+                for i in range(samplerows):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+        elif direction == 'LRcolsDUrows':
+            for j in range(samplecols):
+                for i in reversed(range(samplerows)):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+        elif direction == 'RLcolsDUrows':
+            for j in reversed(range(samplecols)):
+                for i in reversed(range(samplerows)):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+
+
+    elif columns == False:
+        if direction == 'LRcolsUDrows':
+            for i in range(samplerows):
+                for j in range(samplecols):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+
+        elif direction == 'RLcolsUDrows':
+            for i in range(samplerows):
+                for j in reversed(range(samplecols)):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+        elif direction == 'LRcolsDUrows':
+            for i in reversed(range(samplerows)):
+                for j in range(samplecols):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
+
+        elif direction == 'RLcolsDUrows':
+            for i in reversed(range(samplerows)):
+                for j in reversed(range(samplecols)):
+                    for color in range(channels):
+                        if color == 0:
+                            R[vindex] = Rsample[i,j]
+                        elif color == 1:
+                            G[vindex] = Gsample[i,j]
+                        elif color == 2:
+                            B[vindex] = Bsample[i,j]
+                        else:
+                            print('ERROR')
+
+                    vindex += 1
 
     return [R,G,B]
 
