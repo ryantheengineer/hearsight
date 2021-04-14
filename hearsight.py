@@ -22,13 +22,13 @@ from scipy.io.wavfile import write
 # 4/9/21: Merge function works okay, need a better way to handle large datasets
 # without crashing (ex: when sample box is 3x3). Maybe with generators?
 
-def generatorFromZero(maxval):
+def genFromZero(maxval):
     num = 0
     while num < maxval:
         yield num
         num += 1
 
-def generatorFromVal(startval,endval):
+def genFromVal(startval,endval):
     if startval < endval:
         num = startval
         while num < endval:
