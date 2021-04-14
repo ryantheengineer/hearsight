@@ -41,6 +41,12 @@ def genFromVal(startval,endval):
     else:
         print('ERROR: Starting value must be smaller than ending value')
 
+def genReverseToZero(startval):
+    num = startval
+    while num >= 0:
+        yield num
+        num -= 1
+
 def openImage(filename):
     image = Image.open(filename)
     return image
@@ -65,7 +71,7 @@ def scaleToWAV(vector):
     if maxval <= 255 and maxval >= 230:
         vector *= 257
 
-    for i in range(len(vector)):
+    for i in genFromZero(len(vector)):
         vector[i] -= 32768 # Might need to add a range check
     return vector
 
@@ -95,18 +101,18 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
     Gsample = np.zeros([samplerows, samplecols])
     Bsample = np.zeros([samplerows, samplecols])
 
-    for i in range(samplerows):
-        for j in range(samplecols):
+    for i in genFromZero(samplerows):
+        for j in genFromZero(samplecols):
             # Calculate the average pixel value for the appropriate channel
             Ravg = 0.
             Bavg = 0.
             Gavg = 0.
 
-            rowsrange = range(i, i+boxdim)
-            colsrange = range(j, j+boxdim)
+            # rowsrange = range(i, i+boxdim)
+            # colsrange = range(j, j+boxdim)
 
-            for m in rowsrange:
-                for n in colsrange:
+            for m in genFromVal(i, i+boxdim):
+                for n in genFromVal(j, j+boxdim):
                     Ravg += Rdata[m,n]
                     Gavg += Gdata[m,n]
                     Bavg += Bdata[m,n]  # For now the channel splitting is happening early and explicitly to make it clear, but later this should be automated and the channel split should be at the very end for efficiency
@@ -130,8 +136,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
 
     if columns == True:
         if direction == 'LRcolsUDrows':
-            for j in range(samplecols):
-                for i in range(samplerows):
+            for j in genFromZero(samplecols):
+                for i in genFromZero(samplerows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -146,8 +152,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
 
 
         elif direction == 'RLcolsUDrows':
-            for j in reversed(range(samplecols)):
-                for i in range(samplerows):
+            for j in genReverseToZero(samplecols):
+                for i in genFromZero(samplerows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -161,8 +167,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
                     vindex += 1
 
         elif direction == 'LRcolsDUrows':
-            for j in range(samplecols):
-                for i in reversed(range(samplerows)):
+            for j in genFromZero(samplecols):
+                for i in genReverseToZero(samplerows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -176,8 +182,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
                     vindex += 1
 
         elif direction == 'RLcolsDUrows':
-            for j in reversed(range(samplecols)):
-                for i in reversed(range(samplerows)):
+            for j in genReverseToZero(samplecols):
+                for i in genReverseToZero(samplerows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -194,8 +200,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
 
     elif columns == False:
         if direction == 'LRcolsUDrows':
-            for i in range(samplerows):
-                for j in range(samplecols):
+            for i in genFromZero(samplerows):
+                for j in genFromZero(samplecols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -210,8 +216,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
 
 
         elif direction == 'RLcolsUDrows':
-            for i in range(samplerows):
-                for j in reversed(range(samplecols)):
+            for i in genFromZero(samplerows):
+                for j in genReverseToZero(samplecols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -225,8 +231,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
                     vindex += 1
 
         elif direction == 'LRcolsDUrows':
-            for i in reversed(range(samplerows)):
-                for j in range(samplecols):
+            for i in genReverseToZero(samplerows):
+                for j in genFromZero(samplecols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -240,8 +246,8 @@ def vectorizeMergeRGB(data, boxdim, columns, direction):
                     vindex += 1
 
         elif direction == 'RLcolsDUrows':
-            for i in reversed(range(samplerows)):
-                for j in reversed(range(samplecols)):
+            for i in genReverseToZero(samplerows):
+                for j in genReverseToZero(samplecols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = Rsample[i,j]
@@ -286,8 +292,8 @@ def vectorizeRGB(data, columns, direction):
 
     if columns == True:
         if direction == 'LRcolsUDrows':
-            for j in range(cols):
-                for i in range(rows):
+            for j in genFromZero(cols):
+                for i in genFromZero(rows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -302,8 +308,8 @@ def vectorizeRGB(data, columns, direction):
 
 
         elif direction == 'RLcolsUDrows':
-            for j in reversed(range(cols)):
-                for i in range(rows):
+            for j in genReverseToZero(cols):
+                for i in genFromZero(rows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -317,8 +323,8 @@ def vectorizeRGB(data, columns, direction):
                     vindex += 1
 
         elif direction == 'LRcolsDUrows':
-            for j in range(cols):
-                for i in reversed(range(rows)):
+            for j in genFromZero(cols):
+                for i in genReverseToZero(rows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -332,8 +338,8 @@ def vectorizeRGB(data, columns, direction):
                     vindex += 1
 
         elif direction == 'RLcolsDUrows':
-            for j in reversed(range(cols)):
-                for i in reversed(range(rows)):
+            for j in genReverseToZero(cols):
+                for i in genReverseToZero(rows):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -350,8 +356,8 @@ def vectorizeRGB(data, columns, direction):
 
     elif columns == False:
         if direction == 'LRcolsUDrows':
-            for i in range(rows):
-                for j in range(cols):
+            for i in genFromZero(rows):
+                for j in genFromZero(cols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -366,8 +372,8 @@ def vectorizeRGB(data, columns, direction):
 
 
         elif direction == 'RLcolsUDrows':
-            for i in range(rows):
-                for j in reversed(range(cols)):
+            for i in genFromZero(rows):
+                for j in genReverseToZero(cols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -381,8 +387,8 @@ def vectorizeRGB(data, columns, direction):
                     vindex += 1
 
         elif direction == 'LRcolsDUrows':
-            for i in reversed(range(rows)):
-                for j in range(cols):
+            for i in genReverseToZero(rows):
+                for j in genFromZero(cols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
@@ -396,8 +402,8 @@ def vectorizeRGB(data, columns, direction):
                     vindex += 1
 
         elif direction == 'RLcolsDUrows':
-            for i in reversed(range(rows)):
-                for j in reversed(range(cols)):
+            for i in genReverseToZero(rows):
+                for j in genReverseToZero(cols):
                     for color in range(channels):
                         if color == 0:
                             R[vindex] = data[i,j,color]
