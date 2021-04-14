@@ -22,6 +22,10 @@ from scipy.io.wavfile import write
 # 4/9/21: Merge function works okay, need a better way to handle large datasets
 # without crashing (ex: when sample box is 3x3). Maybe with generators?
 
+# The final signal might still need some processing to make a useable sound.
+# This might be done with the Fast Fourier Transform to subtract off unwanted
+# frequencies and then transform it back (for example, the very low frequencies)
+
 def genFromZero(maxval):
     num = 0
     while num < maxval:
