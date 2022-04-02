@@ -1,14 +1,14 @@
 from PIL import Image
 from matplotlib import image
 import matplotlib.pyplot as plt
-import cv2
+# import cv2
 import numpy as np
 
 
 
 def im2array(filename):
     image = Image.open(filename)
-    imarray = np.asarray(image)    
+    imarray = np.asarray(image)
     return imarray
 
 def imhist(imarray):
@@ -27,10 +27,11 @@ def imhist(imarray):
 if __name__ == '__main__':
     imarray = im2array("rainbow-mountains-2.jpg")
     Bhist, Bbin_edges, Ghist, Gbin_edges, Rhist, Rbin_edges = imhist(imarray)
-    
+
     plt.plot(Bhist, 'b')
-    plt.title("Blue")
+    # plt.title("Blue")
     plt.plot(Ghist, 'g')
-    plt.title("Green")
+    # plt.title("Green")
     plt.plot(Rhist, 'r')
-    plt.title("Red")
+    plt.title("RGB Histogram")
+    plt.show()
